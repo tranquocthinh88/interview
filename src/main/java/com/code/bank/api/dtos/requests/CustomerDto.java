@@ -2,6 +2,7 @@ package com.code.bank.api.dtos.requests;
 
 import com.code.bank.models.enums.Gender;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,6 @@ public class CustomerDto {
     private String address;
     @NotBlank(message = "id card must be not blank")
     private String idCard;
-    @NotBlank(message = "date of birth must be not blank")
+    @NotNull(message = "date of birth must be not null")
     private LocalDateTime dateOfBirth;
 }
