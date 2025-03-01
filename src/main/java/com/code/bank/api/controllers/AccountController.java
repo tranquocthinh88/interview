@@ -26,10 +26,10 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping
-    public Response addAccount(@RequestBody @Valid AccountDto accountDto) {
+    public Response addAccount(@RequestBody @Valid AccountDto accountDto) throws Exception{
         Account account = accountMapper.AccountDto2Account(accountDto);
         Customer customer = customerRepository.findById(accountDto.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new DataNotFoundException("Customer not found"));
 
         account.setCustomer(customer);
         return new ResponseSuccess<>(HttpStatus.OK.value(), "create account successfully",

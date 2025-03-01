@@ -8,7 +8,6 @@ import com.code.bank.api.mappers.CustomerMapper;
 import com.code.bank.models.Customer;
 import com.code.bank.services.interfaces.CustomerService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping ("/api/v1/customers")
-//@RequiredArgsConstructor
 public class CustomerController {
 
     private final CustomerMapper customerMapper;
@@ -53,11 +51,25 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public Response updateAddress(@PathVariable int id ,@RequestBody @Valid CustomerDto customerDto) throws Exception {
+    public Response updateCustomer(@PathVariable int id ,@RequestBody @Valid CustomerDto customerDto) throws Exception {
         Customer customer = customerMapper.CustomerDto2Customer(customerDto);
         customer.setId(id);
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "address updated successfully",
                 customerService.update(id, customer));
+    }
+
+    @GetMapping
+    public Response getAllCustomers() {
+        return new ResponseSuccess<>(HttpStatus.OK.value(),
+        "Get all customer successfully",
+                customerService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public Response getCustomerById(@PathVariable int id) throws DataNotFoundException {
+        return new ResponseSuccess<>(HttpStatus.OK.value(),
+                "Get customer by id successfully",
+                customerService.findById(id).orElseThrow(() -> new DataNotFoundException("Customer not found")));
     }
 }
