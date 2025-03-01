@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

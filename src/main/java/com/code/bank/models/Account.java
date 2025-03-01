@@ -27,7 +27,7 @@ public class Account {
     @Column(name = "transaction_limit")
     private double transactionLimit;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", unique = true)
     private Customer customer;
 }
