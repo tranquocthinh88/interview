@@ -27,16 +27,24 @@ public class TransactionController {
     private final TransactionMapper transactionMapper;
     private final AccountRepository accountRepository;
 
+//    @PostMapping
+//    public Response addTransaction(@RequestBody @Valid TransactionDto transactionDto) throws Exception{
+//        Transaction transaction = transactionMapper.Transaction2DtoTransaction(transactionDto);
+//        Account account = accountRepository.findById(transaction.getAccount().getId())
+//                .orElseThrow(() -> new DataNotFoundException("account not found"));
+//        transaction.setAccount(account);
+//        return new ResponseSuccess<>(HttpStatus.OK.value(),
+//                "add transaction successful",
+//                transactionService.save(transaction));
+//    }
+
     @PostMapping
-    public Response addTransaction(@RequestBody @Valid TransactionDto transactionDto) throws Exception{
-        Transaction transaction = transactionMapper.Transaction2DtoTransaction(transactionDto);
-        Account account = accountRepository.findById(transaction.getAccount().getId())
-                .orElseThrow(() -> new DataNotFoundException("account not found"));
-        transaction.setAccount(account);
+    public Response addTransaction(@RequestBody @Valid TransactionDto transactionDto, String accountNumber) throws Exception{
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "add transaction successful",
-                transactionService.save(transaction));
+                transactionService.createTransaction(accountNumber, transactionDto));
     }
+
 
     @GetMapping
     public Response getAllTransactions() {

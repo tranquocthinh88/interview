@@ -54,6 +54,15 @@ public class AccountController {
         );
     }
 
+    @GetMapping("/cus/{customerId}")
+    public Response getAccountByCustomerId(@PathVariable int customerId) throws DataNotFoundException {
+        return new ResponseSuccess<>(
+                HttpStatus.OK.value(),
+                "Get account by customer id successfully",
+                accountService.findAccountByCustomerId(customerId).orElseThrow(()-> new DataNotFoundException("Account not found"))
+        );
+    }
+
     @DeleteMapping("/{id}")
     public Response deleteAccount(@PathVariable int id) throws DataNotFoundException {
         accountService.delete(id);

@@ -29,6 +29,8 @@ public class Transaction {
     private double fee;
     @Column(name = "location")
     private String location;
+    @Column(name = "receiver_account")
+    private String receiverAccount;
 
     @ManyToOne(fetch = FetchType.LAZY) // tối ưu dữ liệu, khi cần mới lấy
     @JoinColumn(name = "account_id", nullable = false)
