@@ -18,7 +18,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_id")
     private int id;
-    @Column(name = "account_number")
+    @Column(name = "account_number", unique = true)
     private String accountNumber;
     @Column(name = "balance")
     private double balance;

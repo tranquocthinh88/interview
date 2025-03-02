@@ -12,12 +12,10 @@ import java.time.LocalDateTime;
 public class TransactionDto {
     @NotNull(message = "transaction type must be not null")
     private TransactionType transactionType;
-    @NotBlank(message = "amount must be not blank")
+    @NotNull(message = "amount must be not null")
     private double amount;
     private LocalDateTime transactionDate;
-    @NotBlank(message = "fee must be not blank")
-    private double fee;
     @NotNull(message = "location must be not null")
     private String location;
-    private Integer accountId;
+    private String receiverAccountNumber;
 }
