@@ -18,7 +18,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_id")
     private int id;
-    @Column(name = "account_number")
+    @Column(name = "account_number", unique = true)
     private String accountNumber;
     @Column(name = "balance")
     private double balance;
@@ -27,7 +27,7 @@ public class Account {
     @Column(name = "transaction_limit")
     private double transactionLimit;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", unique = true)
     private Customer customer;
 }
