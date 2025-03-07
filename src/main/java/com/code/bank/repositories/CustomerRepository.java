@@ -9,8 +9,8 @@ import java.util.List;
 public interface CustomerRepository extends BaseRepository<Customer, Integer> {
 
     @Query("select cs from Account ac \n" +
-            "inner join Customer cs on cs.id = ac.id\n" +
-            "inner join Address ad on ad.id = ac.id \n" +
-            "where ad.city like %?1% or ad.district like %?1% or ad.ward like %?1% or ad.street like %?1%")
+            "inner join Customer cs on cs.id = ac.customer.id\n" +
+            "inner join Address ad on ad.id = ac.address.id \n" +
+            "where ad.city like %?1% or ad.district like %?1% or ad.ward like %?1% or ad.street like %?1% or ad.addressDetail like %?1%")
     List<Customer> findCustomersByLocation(String location);
 }

@@ -27,7 +27,7 @@ public class Account {
     @Column(name = "transaction_limit")
     private double transactionLimit;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 

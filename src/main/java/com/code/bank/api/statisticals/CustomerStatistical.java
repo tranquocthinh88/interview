@@ -19,6 +19,7 @@ public class CustomerStatistical {
 
     @GetMapping("/location")
     public Response getCustomers(@RequestParam String location) {
+        System.out.println(location);
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "Get customer by location successfully",
                 customerStatisticalService.getCustomerCountByLocation(location));

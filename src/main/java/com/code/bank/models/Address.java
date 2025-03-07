@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,5 +25,7 @@ public class Address {
     private String district;
     @Column(name = "city")
     private String city;
+    @Column(name = "address_detail")
+    private String addressDetail;
 
 }

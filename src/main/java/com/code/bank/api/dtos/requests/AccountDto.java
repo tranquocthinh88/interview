@@ -20,4 +20,6 @@ public class AccountDto {
     @NotNull(message = "transaction limit must be not null")
     private double transactionLimit;
     private Integer customerId;
+    @NotNull(message = "address must be not null")
+    private AddressDto addressDto;
 }

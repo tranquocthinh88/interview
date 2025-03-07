@@ -6,7 +6,9 @@ import com.code.bank.api.dtos.responses.Response;
 import com.code.bank.api.dtos.responses.ResponseSuccess;
 import com.code.bank.api.exceptions.DataNotFoundException;
 import com.code.bank.api.mappers.AccountMapper;
+import com.code.bank.api.mappers.AddressMapper;
 import com.code.bank.models.Account;
+import com.code.bank.models.Address;
 import com.code.bank.models.Customer;
 import com.code.bank.repositories.CustomerRepository;
 import com.code.bank.services.interfaces.AccountService;
@@ -24,13 +26,15 @@ public class AccountController {
     private final AccountMapper accountMapper;
     private final CustomerRepository customerRepository;
     private final AccountService accountService;
+    private final AddressMapper addressMapper;
 
     @PostMapping
     public Response addAccount(@RequestBody @Valid AccountDto accountDto) throws Exception{
         Account account = accountMapper.AccountDto2Account(accountDto);
+        Address address = addressMapper.AddressDto2Address(accountDto.getAddressDto());
+        account.setAddress(address);
         Customer customer = customerRepository.findById(accountDto.getCustomerId())
                 .orElseThrow(() -> new DataNotFoundException("Customer not found"));
-
         account.setCustomer(customer);
         return new ResponseSuccess<>(HttpStatus.OK.value(), "create account successfully",
                 accountService.save(account));
