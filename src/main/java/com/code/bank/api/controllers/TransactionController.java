@@ -9,6 +9,8 @@ import com.code.bank.models.Account;
 import com.code.bank.models.Transaction;
 import com.code.bank.repositories.AccountRepository;
 import com.code.bank.services.interfaces.TransactionService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/transactions")
 @RequiredArgsConstructor
+@SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
 public class TransactionController {
 
     private final TransactionService transactionService;

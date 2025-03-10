@@ -10,6 +10,8 @@ import com.code.bank.models.Account;
 import com.code.bank.models.Customer;
 import com.code.bank.repositories.CustomerRepository;
 import com.code.bank.services.interfaces.AccountService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
+@SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
 public class AccountController {
     private final AccountMapper accountMapper;
     private final CustomerRepository customerRepository;
