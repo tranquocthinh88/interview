@@ -47,21 +47,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String verifyOtp(String sessionInfo, String otp) {
-        String FIREBASE_API_KEY = "AIzaSyBPGDw6J9ordv6YlTxmRNOuvnyvi6uRfp8";
-        String url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPhoneNumber?key=" + FIREBASE_API_KEY;
-
-        Map<String, String> request = new HashMap<>();
-        request.put("sessionInfo", sessionInfo);
-        request.put("code", otp);
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
-
-        return (String) response.getBody().get("idToken");
-    }
-
-    @Override
     public LoginResponse login(LoginRequestDto loginRequestDto) throws DataNotFoundException {
         String phone = loginRequestDto.getUsername();
         String password = loginRequestDto.getPassword();
