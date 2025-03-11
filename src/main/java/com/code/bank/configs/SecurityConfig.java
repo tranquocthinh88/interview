@@ -58,7 +58,10 @@ public class SecurityConfig {
                                     "/swagger-ui.html",
                                     "/api/v1/auth/**"
                                     ).permitAll();
-                            author.requestMatchers(HttpMethod.GET, "/api/v1/customers/{id}", "/api/v1/transactions/**").hasAuthority("CUSTOMER");
+                            author.requestMatchers(HttpMethod.POST, "/api/v1/customers/**").permitAll();
+                            author.requestMatchers(HttpMethod.GET,
+                                    "/api/v1/customers/{id}",
+                                    "/api/v1/transactions/**").hasAuthority("CUSTOMER");
                             author.anyRequest().hasAuthority("ADMIN");
                         }
                 )

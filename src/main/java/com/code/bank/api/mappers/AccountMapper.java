@@ -8,6 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
     @Mapping(target = "customer", ignore = true)
+    @Mapping(target = "accountStatus", expression = "java(com.code.bank.models.enums.AccountStatus.ACTIVE)")
     Account AccountDto2Account(AccountDto accountDto);
-
 }

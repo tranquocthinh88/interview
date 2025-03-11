@@ -8,6 +8,7 @@ import com.code.bank.api.exceptions.DataNotFoundException;
 import com.code.bank.api.mappers.AccountMapper;
 import com.code.bank.models.Account;
 import com.code.bank.models.Customer;
+import com.code.bank.models.enums.AccountStatus;
 import com.code.bank.repositories.CustomerRepository;
 import com.code.bank.services.interfaces.AccountService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -89,5 +90,15 @@ public class AccountController {
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "account updated successfully",
                 accountService.update(id, account));
+    }
+
+
+    @PutMapping("/updateStatus/{accountNumber}")
+    public Response updateAccount(@PathVariable String accountNumber ,@RequestBody AccountStatus accountNewStatus) throws Exception {
+        accountService.changeAccountStatus(accountNumber, accountNewStatus);
+        return new ResponseSuccess<>(HttpStatus.OK.value(),
+                "status account updated successfully",
+               null
+        );
     }
 }
