@@ -28,5 +28,4 @@ public interface TransactionRepository extends BaseRepository<Transaction, Strin
             "AND MONTH(trans.transactionDate) IN (:months) " +
             "AND trans.transactionType = :transactionType")
     long countTransactionByQuarter(@Param("months") List<Integer> months,@Param("year") int year, @Param("transactionType")TransactionType transactionType);
-
 }

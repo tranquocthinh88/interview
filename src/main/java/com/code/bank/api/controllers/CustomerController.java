@@ -7,6 +7,8 @@ import com.code.bank.api.exceptions.DataNotFoundException;
 import com.code.bank.api.mappers.CustomerMapper;
 import com.code.bank.models.Customer;
 import com.code.bank.services.interfaces.CustomerService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping ("/api/v1/customers")
+@SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
 public class CustomerController {
 
     private final CustomerMapper customerMapper;
@@ -72,6 +75,4 @@ public class CustomerController {
                 "Get customer by id successfully",
                 customerService.findById(id).orElseThrow(() -> new DataNotFoundException("Customer not found")));
     }
-
-
 }

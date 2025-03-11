@@ -1,5 +1,6 @@
 package com.code.bank.models;
 
+import com.code.bank.models.enums.AccountStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,11 +27,12 @@ public class Account {
     private LocalDateTime openDate;
     @Column(name = "transaction_limit")
     private double transactionLimit;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_status")
+    private AccountStatus accountStatus;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", unique = true)
     private Customer customer;

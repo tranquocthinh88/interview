@@ -7,6 +7,15 @@ import com.code.bank.api.exceptions.DataNotFoundException;
 import com.code.bank.api.mappers.TransactionMapper;
 import com.code.bank.models.Account;
 import com.code.bank.models.Transaction;
+import com.code.bank.repositories.AccountRepository;
+import com.code.bank.services.interfaces.TransactionService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import java.time.DateTimeException;
 import com.code.bank.models.enums.TransactionType;
 import com.code.bank.repositories.AccountRepository;
 import com.code.bank.services.interfaces.TransactionService;
@@ -26,22 +35,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/transactions")
 @RequiredArgsConstructor
+@SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
 public class TransactionController {
 
     private final TransactionService transactionService;
     private final TransactionMapper transactionMapper;
     private final AccountRepository accountRepository;
-
-//    @PostMapping
-//    public Response addTransaction(@RequestBody @Valid TransactionDto transactionDto) throws Exception{
-//        Transaction transaction = transactionMapper.Transaction2DtoTransaction(transactionDto);
-//        Account account = accountRepository.findById(transaction.getAccount().getId())
-//                .orElseThrow(() -> new DataNotFoundException("account not found"));
-//        transaction.setAccount(account);
-//        return new ResponseSuccess<>(HttpStatus.OK.value(),
-//                "add transaction successful",
-//                transactionService.save(transaction));
-//    }
 
     @PostMapping
     public Response addTransaction(@RequestBody @Valid TransactionDto transactionDto, String accountNumber) throws Exception{
@@ -88,7 +87,6 @@ public class TransactionController {
                 transactionService.updatePatch(id,data));
     }
 
-
     @GetMapping("/search")
     public Page<Transaction> searchTransactions(
             @RequestParam(required = false) BigDecimal minAmount,
@@ -100,4 +98,5 @@ public class TransactionController {
     ) {
         return transactionService.searchTransactions(minAmount, maxAmount, transactionType, fromDate, toDate, pageable);
     }
+
 }

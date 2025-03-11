@@ -6,6 +6,13 @@ import com.code.bank.api.dtos.responses.Response;
 import com.code.bank.api.dtos.responses.ResponseSuccess;
 import com.code.bank.api.exceptions.DataNotFoundException;
 import com.code.bank.api.mappers.AccountMapper;
+import com.code.bank.models.Account;
+import com.code.bank.models.Customer;
+import com.code.bank.models.enums.AccountStatus;
+import com.code.bank.repositories.CustomerRepository;
+import com.code.bank.services.interfaces.AccountService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import com.code.bank.api.mappers.AddressMapper;
 import com.code.bank.models.Account;
 import com.code.bank.models.Address;
@@ -22,6 +29,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
+@SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
 public class AccountController {
     private final AccountMapper accountMapper;
     private final CustomerRepository customerRepository;
@@ -31,6 +39,8 @@ public class AccountController {
     @PostMapping
     public Response addAccount(@RequestBody @Valid AccountDto accountDto) throws Exception{
         Account account = accountMapper.AccountDto2Account(accountDto);
+        Customer customer = customerRepository.findById(accountDto.getCustomerId())
+                .orElseThrow(() -> new DataNotFoundException("Customer not found"));
         Address address = addressMapper.AddressDto2Address(accountDto.getAddressDto());
         account.setAddress(address);
         Customer customer = customerRepository.findById(accountDto.getCustomerId())
@@ -91,4 +101,14 @@ public class AccountController {
                 "account updated successfully",
                 accountService.update(id, account));
     }
+
+    @PutMapping("/updateStatus/{accountNumber}")
+    public Response updateAccount(@PathVariable String accountNumber ,@RequestBody AccountStatus accountNewStatus) throws Exception {
+        accountService.changeAccountStatus(accountNumber, accountNewStatus);
+        return new ResponseSuccess<>(HttpStatus.OK.value(),
+                "status account updated successfully",
+               null
+        );
+    }
+
 }
