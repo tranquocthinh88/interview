@@ -26,8 +26,10 @@ public class Customer {
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(name = "address")
-    private String address;
+    @Column(name = "temporary_address")
+    private String temporaryAddress;
+    @Column(name = "permanent_address")
+    private String permanentAddress;
     @Column(name = "id_card")
     private String idCard;
     @Column(name = "date_of_birth")

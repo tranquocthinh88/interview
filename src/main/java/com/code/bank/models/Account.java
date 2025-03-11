@@ -31,6 +31,9 @@ public class Account {
     @Column(name = "account_status")
     private AccountStatus accountStatus;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", unique = true)
     private Customer customer;
 }

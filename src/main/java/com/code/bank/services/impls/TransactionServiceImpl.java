@@ -7,10 +7,16 @@ import com.code.bank.models.enums.TransactionType;
 import com.code.bank.repositories.AccountRepository;
 import com.code.bank.repositories.TransactionRepository;
 import com.code.bank.services.interfaces.TransactionService;
+import com.code.bank.repositories.customizations.TransactionSpecification;
+import com.code.bank.services.interfaces.TransactionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -97,6 +103,13 @@ public class TransactionServiceImpl extends BaseServiceImpl<Transaction, String>
         return transaction;
     }
 
+    @Override
+    public Page<Transaction> searchTransactions(BigDecimal minAmount, BigDecimal maxAmount, TransactionType transactionType,
+                                                LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable) {
+        Specification<Transaction> spec = TransactionSpecification.filterTransactions(minAmount, maxAmount,
+                                            transactionType, fromDate, toDate);
+        return transactionRepository.findAll(spec, pageable);
+    }
     private double getTransactionFee(TransactionType transactionType) {
         return switch (transactionType) {
             case WITHDRAWAL , TRANSFER -> FEE;

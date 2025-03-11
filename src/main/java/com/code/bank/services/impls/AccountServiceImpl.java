@@ -12,6 +12,9 @@ import com.code.bank.services.interfaces.AccountService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.code.bank.repositories.AccountRepository;
+import com.code.bank.services.interfaces.AccountService;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,6 +36,9 @@ public class AccountServiceImpl extends BaseServiceImpl<Account, Integer> implem
         this.accountStatusHistoryRepository = accountStatusHistoryRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAccountRepository = userAccountRepository;
+    public AccountServiceImpl(JpaRepository<Account, Integer> repository, AccountRepository accountRepository) {
+        super(repository, Account.class);
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -67,4 +73,5 @@ public class AccountServiceImpl extends BaseServiceImpl<Account, Integer> implem
             userAccountRepository.save(userAccount);
         }
     }
+
 }
