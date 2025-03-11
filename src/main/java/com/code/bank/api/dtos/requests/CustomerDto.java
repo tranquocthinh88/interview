@@ -1,6 +1,7 @@
 package com.code.bank.api.dtos.requests;
 
 import com.code.bank.models.enums.Gender;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -20,8 +21,10 @@ public class CustomerDto {
     private String email;
     @NotBlank(message = "gender must be not blank")
     private String gender;
-    @NotBlank(message = "address must be not blank")
-    private String address;
+    @NotBlank(message = "temporary address must be not blank")
+    private String temporaryAddress;
+    @NotBlank(message = "permanent address must be not blank")
+    private String permanentAddress;
     @NotBlank(message = "id card must be not blank")
     private String idCard;
     @NotNull(message = "date of birth must be not null")

@@ -7,14 +7,19 @@ import com.code.bank.api.exceptions.DataNotFoundException;
 import com.code.bank.api.mappers.TransactionMapper;
 import com.code.bank.models.Account;
 import com.code.bank.models.Transaction;
+import com.code.bank.models.enums.TransactionType;
 import com.code.bank.repositories.AccountRepository;
 import com.code.bank.services.interfaces.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -81,5 +86,18 @@ public class TransactionController {
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "update transaction successfully",
                 transactionService.updatePatch(id,data));
+    }
+
+
+    @GetMapping("/search")
+    public Page<Transaction> searchTransactions(
+            @RequestParam(required = false) BigDecimal minAmount,
+            @RequestParam(required = false) BigDecimal maxAmount,
+            @RequestParam(required = false) TransactionType transactionType,
+            @RequestParam(required = false) LocalDateTime fromDate,
+            @RequestParam(required = false) LocalDateTime toDate,
+            Pageable pageable
+    ) {
+        return transactionService.searchTransactions(minAmount, maxAmount, transactionType, fromDate, toDate, pageable);
     }
 }
