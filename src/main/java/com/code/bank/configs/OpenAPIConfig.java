@@ -31,6 +31,5 @@ public class OpenAPIConfig {
                 .type(SecurityScheme.Type.HTTP)
                 .bearerFormat("JWT")
                 .in(SecurityScheme.In.HEADER);
-                .externalDocs(new ExternalDocumentation().description("Bank API Documentation").url("https://bankIT.com"));
     }
 }

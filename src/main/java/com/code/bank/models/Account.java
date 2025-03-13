@@ -21,6 +21,8 @@ public class Account {
     private int id;
     @Column(name = "account_number", unique = true)
     private String accountNumber;
+//    @Column(name = "name_bank")
+//    private String nameBank;
     @Column(name = "balance")
     private double balance;
     @Column(name = "open_date")

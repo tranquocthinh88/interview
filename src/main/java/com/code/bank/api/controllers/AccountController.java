@@ -39,8 +39,6 @@ public class AccountController {
     @PostMapping
     public Response addAccount(@RequestBody @Valid AccountDto accountDto) throws Exception{
         Account account = accountMapper.AccountDto2Account(accountDto);
-        Customer customer = customerRepository.findById(accountDto.getCustomerId())
-                .orElseThrow(() -> new DataNotFoundException("Customer not found"));
         Address address = addressMapper.AddressDto2Address(accountDto.getAddressDto());
         account.setAddress(address);
         Customer customer = customerRepository.findById(accountDto.getCustomerId())

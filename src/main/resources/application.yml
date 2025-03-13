@@ -3,14 +3,14 @@ spring:
     name: bank
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show_sql: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql:/ /localhost:5432/bankdb
+    url: jdbc:postgresql://localhost:5432/bankdb
     username: postgres
     password: 123456
   security:
