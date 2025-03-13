@@ -1,11 +1,9 @@
 package com.code.bank.services.impls.statisticals;
 
-import com.code.bank.models.Customer;
+import com.code.bank.api.dtos.responses.customer.CustomerStatisticalResponse;
 import com.code.bank.repositories.CustomerRepository;
 import com.code.bank.services.interfaces.statisticals.CustomerStatisticalService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CustomerStatisticalServiceImpl implements CustomerStatisticalService {
@@ -16,8 +14,12 @@ public class CustomerStatisticalServiceImpl implements CustomerStatisticalServic
         this.customerRepository = customerRepository;
     }
 
+
     @Override
-    public List<Customer> getCustomerCountByLocation(String location) {
-        return customerRepository.findCustomersByLocation(location);
+    public CustomerStatisticalResponse getCustomerCountByLocation(String location) {
+        CustomerStatisticalResponse response = new CustomerStatisticalResponse();
+        response.setCount(customerRepository.countCustomersByLocation(location));
+        response.setCustomers(customerRepository.findCustomersByLocation(location));
+        return response;
     }
 }

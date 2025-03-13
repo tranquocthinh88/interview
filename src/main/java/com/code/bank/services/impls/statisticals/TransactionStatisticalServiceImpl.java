@@ -1,6 +1,6 @@
 package com.code.bank.services.impls.statisticals;
 
-import com.code.bank.api.dtos.responses.TransactionStatisticalResponse;
+import com.code.bank.api.dtos.responses.transaction.TransactionStatisticalResponse;
 import com.code.bank.models.enums.TransactionType;
 import com.code.bank.repositories.TransactionRepository;
 import com.code.bank.services.interfaces.statisticals.TransactionStatisticalService;
@@ -27,18 +27,28 @@ public class TransactionStatisticalServiceImpl implements TransactionStatistical
     }
 
     @Override
-    public long countTransactionByWeek(LocalDate startDate, LocalDate endDate, TransactionType transactionType) {
-        return transactionRepository.countTransactionByWeek(startDate, endDate, transactionType);
+    public TransactionStatisticalResponse findTransactionByWeek(LocalDate startDate, LocalDate endDate, TransactionType transactionType) {
+        TransactionStatisticalResponse response = new TransactionStatisticalResponse();
+        response.setCount(transactionRepository.countTransactionByWeek(startDate, endDate, transactionType));
+        response.setTransactions(transactionRepository.findTransactionByWeek(startDate, endDate, transactionType));
+        return response;
     }
 
     @Override
-    public long countTransactionByMonth(int month, int year, TransactionType transactionType) {
-        return transactionRepository.countTransactionByMonth(month, year, transactionType);
+    public TransactionStatisticalResponse findTransactionByMonth(int month, int year, TransactionType transactionType) {
+        TransactionStatisticalResponse response = new TransactionStatisticalResponse();
+        response.setCount(transactionRepository.countTransactionByMonth(month, year, transactionType));
+        response.setTransactions(transactionRepository.findTransactionByMonth(month, year, transactionType));
+        return response;
     }
 
     @Override
-    public long countTransactionByQuarter(List<Integer> months, int year, TransactionType transactionType) {
-        return transactionRepository.countTransactionByQuarter(months, year, transactionType);
+    public TransactionStatisticalResponse findTransactionByQuarter(List<Integer> months, int year, TransactionType transactionType) {
+        TransactionStatisticalResponse response = new TransactionStatisticalResponse();
+        response.setCount(transactionRepository.countTransactionByQuarter(months, year, transactionType));
+        response.setTransactions(transactionRepository.findTransactionByQuarter(months, year, transactionType));
+        return response;
     }
+
 
 }

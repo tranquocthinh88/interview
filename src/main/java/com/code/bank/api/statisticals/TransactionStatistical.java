@@ -2,9 +2,10 @@ package com.code.bank.api.statisticals;
 
 import com.code.bank.api.dtos.responses.Response;
 import com.code.bank.api.dtos.responses.ResponseSuccess;
-import com.code.bank.api.dtos.responses.TransactionStatisticalResponse;
 import com.code.bank.models.enums.TransactionType;
 import com.code.bank.services.interfaces.statisticals.TransactionStatisticalService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/statistical/transaction")
 @RequiredArgsConstructor
+@SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
 public class TransactionStatistical {
 
     private final TransactionStatisticalService transactionStatisticalService;
@@ -32,21 +34,21 @@ public class TransactionStatistical {
 
 
     @GetMapping("/week")
-    public Response countTransactionByWeek(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate, TransactionType transactionType) {
+    public Response findTransactionByWeek(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate, TransactionType transactionType) {
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "Get quantity transaction by week successfully",
-                transactionStatisticalService.countTransactionByWeek(startDate, endDate, transactionType));
+                transactionStatisticalService.findTransactionByWeek(startDate, endDate, transactionType));
     }
 
     @GetMapping("/month")
-    public Response countTransactionByMonth(@RequestParam int month, @RequestParam int year, TransactionType transactionType) {
+    public Response findTransactionByMonth(@RequestParam int month, @RequestParam int year, TransactionType transactionType) {
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "Get quantity transaction by month successfully",
-                transactionStatisticalService.countTransactionByMonth(month, year, transactionType));
+                transactionStatisticalService.findTransactionByMonth(month, year, transactionType));
     }
 
     @GetMapping("/quarter")
-    public Response countTransactionByQuarter(@RequestParam int quarter,@RequestParam int year, TransactionType transactionType) {
+    public Response findTransactionByQuarter(@RequestParam int quarter,@RequestParam int year, TransactionType transactionType) {
         List<Integer> months = switch (quarter) {
             case 1 -> Arrays.asList(1, 2, 3);
             case 2 -> Arrays.asList(4, 5, 6);
@@ -56,6 +58,6 @@ public class TransactionStatistical {
         };
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "Get quantity transaction by quarter successfully",
-                transactionStatisticalService.countTransactionByQuarter(months, year, transactionType));
+                transactionStatisticalService.findTransactionByQuarter(months, year, transactionType));
     }
 }

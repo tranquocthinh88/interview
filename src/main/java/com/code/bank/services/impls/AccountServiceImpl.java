@@ -27,18 +27,12 @@ public class AccountServiceImpl extends BaseServiceImpl<Account, Integer> implem
     private final PasswordEncoder passwordEncoder;
     private final UserAccountRepository userAccountRepository;
 
-    public AccountServiceImpl(JpaRepository<Account, Integer> repository,
-                              AccountRepository accountRepository,
-                              AccountStatusHistoryRepository accountStatusHistoryRepository,
-                              PasswordEncoder passwordEncoder, UserAccountRepository userAccountRepository) {
+    public AccountServiceImpl(JpaRepository<Account, Integer> repository, AccountRepository accountRepository, AccountStatusHistoryRepository accountStatusHistoryRepository, PasswordEncoder passwordEncoder, UserAccountRepository userAccountRepository) {
         super(repository, Account.class);
         this.accountRepository = accountRepository;
         this.accountStatusHistoryRepository = accountStatusHistoryRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAccountRepository = userAccountRepository;
-    public AccountServiceImpl(JpaRepository<Account, Integer> repository, AccountRepository accountRepository) {
-        super(repository, Account.class);
-        this.accountRepository = accountRepository;
     }
 
     @Override
