@@ -2,6 +2,7 @@ package com.code.bank.api.statisticals;
 
 import com.code.bank.api.dtos.responses.Response;
 import com.code.bank.api.dtos.responses.ResponseSuccess;
+import com.code.bank.api.dtos.responses.TransactionStatisticalResponse;
 import com.code.bank.models.enums.TransactionType;
 import com.code.bank.services.interfaces.statisticals.TransactionStatisticalService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,14 +24,15 @@ public class TransactionStatistical {
     private final TransactionStatisticalService transactionStatisticalService;
 
     @GetMapping("/date")
-    public Response countTransactionByDate(@RequestParam LocalDateTime date, TransactionType transactionType) {
+    public Response findTransactionByDate(@RequestParam LocalDate date, TransactionType transactionType) {
         return new ResponseSuccess<>(HttpStatus.OK.value(),
-                "Get quantity transaction by date successfully",
-                transactionStatisticalService.countTransactionByDay(date, transactionType));
+                "Get transaction by date successfully",
+                transactionStatisticalService.findTransactionByDate(date, transactionType));
     }
 
+
     @GetMapping("/week")
-    public Response countTransactionByWeek(@RequestParam LocalDateTime startDate,@RequestParam LocalDateTime endDate, TransactionType transactionType) {
+    public Response countTransactionByWeek(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate, TransactionType transactionType) {
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "Get quantity transaction by week successfully",
                 transactionStatisticalService.countTransactionByWeek(startDate, endDate, transactionType));

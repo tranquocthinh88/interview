@@ -1,12 +1,12 @@
 package com.code.bank.services.impls.statisticals;
 
-import com.code.bank.models.Transaction;
+import com.code.bank.api.dtos.responses.TransactionStatisticalResponse;
 import com.code.bank.models.enums.TransactionType;
 import com.code.bank.repositories.TransactionRepository;
 import com.code.bank.services.interfaces.statisticals.TransactionStatisticalService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -19,12 +19,15 @@ public class TransactionStatisticalServiceImpl implements TransactionStatistical
     }
 
     @Override
-    public long countTransactionByDay(LocalDateTime date, TransactionType transactionType) {
-        return transactionRepository.countTransactionByDay(date, transactionType);
+    public TransactionStatisticalResponse findTransactionByDate(LocalDate date, TransactionType transactionType) {
+        TransactionStatisticalResponse response = new TransactionStatisticalResponse();
+        response.setCount(transactionRepository.countTransactionByDay(date, transactionType));
+        response.setTransactions(transactionRepository.findTransactionByDate(date, transactionType));
+        return response;
     }
 
     @Override
-    public long countTransactionByWeek(LocalDateTime startDate, LocalDateTime endDate, TransactionType transactionType) {
+    public long countTransactionByWeek(LocalDate startDate, LocalDate endDate, TransactionType transactionType) {
         return transactionRepository.countTransactionByWeek(startDate, endDate, transactionType);
     }
 
