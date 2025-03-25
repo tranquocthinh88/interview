@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 @Entity
 @Table(name = "t_transactions")
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transaction {
+public class Transaction implements Serializable {
     @Id
     @Column(name = "transaction_id")
     private String id;

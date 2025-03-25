@@ -11,9 +11,12 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.code.bank.models.enums.TransactionType;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/transactions")
 @RequiredArgsConstructor
+@Slf4j
 @SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
 public class TransactionController {
 
@@ -90,6 +94,19 @@ public class TransactionController {
     ) {
         Pageable pageable = PageRequest.of(page, size);
         return transactionService.searchTransactions(minAmount, maxAmount, transactionType, fromDate, toDate, pageable);
+    }
+
+    @GetMapping("/redis/{accountId}")
+    public Response getTransactionByAccountId(@PathVariable int accountId) {
+        long startTime = System.currentTimeMillis();
+        Response response = new ResponseSuccess<>(
+                HttpStatus.OK.value(),
+                "Get transaction by account id use redis successfully",
+                transactionService.getTransactionsByAccountId(accountId)
+        );
+        long endTime = System.currentTimeMillis();
+        log.info("getTransactionByAccountId() using redis executed in {} ms", (endTime - startTime));
+        return response;
     }
 
 }

@@ -9,6 +9,7 @@ import com.code.bank.api.mappers.AccountMapper;
 import com.code.bank.models.Account;
 import com.code.bank.models.Customer;
 import com.code.bank.models.enums.AccountStatus;
+import com.code.bank.repositories.AccountRepository;
 import com.code.bank.repositories.CustomerRepository;
 import com.code.bank.services.interfaces.AccountService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -17,6 +18,7 @@ import com.code.bank.api.mappers.AddressMapper;
 import com.code.bank.models.Address;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,12 +27,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
+@Slf4j
 @SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
 public class AccountController {
     private final AccountMapper accountMapper;
     private final CustomerRepository customerRepository;
     private final AccountService accountService;
     private final AddressMapper addressMapper;
+    private final AccountRepository accountRepository;
 
     @PostMapping
     public Response addAccount(@RequestBody @Valid AccountDto accountDto) throws Exception{
@@ -40,17 +44,40 @@ public class AccountController {
         Customer customer = customerRepository.findById(accountDto.getCustomerId())
                 .orElseThrow(() -> new DataNotFoundException("Customer not found"));
         account.setCustomer(customer);
-        return new ResponseSuccess<>(HttpStatus.OK.value(), "create account successfully",
-                accountService.save(account));
+
+        Account saveAccount = accountRepository.save(account);
+        accountService.updateAccountRedis(saveAccount);
+
+        return new ResponseSuccess<>(HttpStatus.OK.value(),
+                "create account successfully",
+                saveAccount
+                );
     }
 
     @GetMapping
     public Response getAllAccount() {
-        return new ResponseSuccess<>(
+        long startTime = System.currentTimeMillis();
+        Response response = new ResponseSuccess<>(
                 HttpStatus.OK.value(),
                 "Get all accounts successfully",
                 accountService.findAll()
         );
+        long endTime = System.currentTimeMillis();
+        log.info("getAllAccount() executed in {} ms", (endTime - startTime));
+        return response;
+    }
+
+    @GetMapping("/getALl/redis")
+    public Response getAllAccountRedis() {
+        long startTime = System.currentTimeMillis();
+        Response response = new ResponseSuccess<>(
+                HttpStatus.OK.value(),
+                "Get all accounts redis successfully",
+                accountService.getAllAccountRedis()
+        );
+        long endTime = System.currentTimeMillis();
+        log.info("getAllAccountRedis() executed in {} ms", (endTime - startTime));
+        return response;
     }
 
     @GetMapping("/{id}")

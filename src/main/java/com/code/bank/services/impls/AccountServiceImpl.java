@@ -10,13 +10,13 @@ import com.code.bank.repositories.AccountStatusHistoryRepository;
 import com.code.bank.repositories.UserAccountRepository;
 import com.code.bank.services.interfaces.AccountService;
 import jakarta.annotation.PostConstruct;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.code.bank.repositories.AccountRepository;
-import com.code.bank.services.interfaces.AccountService;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,6 +55,24 @@ public class AccountServiceImpl extends BaseServiceImpl<Account, Integer> implem
             accountRepository.save(account);
         }
     }
+
+    @Override
+    @Cacheable(value = "accounts")
+    public List<Account> getAllAccountRedis() {
+        return accountRepository.findAll();
+    }
+
+    @Override
+    @CacheEvict(value = "accounts", allEntries = true)
+    public void updateAccountRedis(Account account) {
+        accountRepository.save(account);
+    }
+//
+//    @Override
+//    @CacheEvict(value = "accounts", allEntries = true)
+//    public void updateAccount(Account account) {
+//        accountRepository.save(account);
+//    }
 
     @PostConstruct
     public void createAdminAccount() {
