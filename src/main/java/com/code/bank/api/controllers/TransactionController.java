@@ -5,35 +5,26 @@ import com.code.bank.api.dtos.responses.Response;
 import com.code.bank.api.dtos.responses.ResponseSuccess;
 import com.code.bank.api.exceptions.DataNotFoundException;
 import com.code.bank.api.mappers.TransactionMapper;
-import com.code.bank.models.Account;
 import com.code.bank.models.Transaction;
-import com.code.bank.repositories.AccountRepository;
 import com.code.bank.services.interfaces.TransactionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import java.time.DateTimeException;
 import com.code.bank.models.enums.TransactionType;
-import com.code.bank.repositories.AccountRepository;
-import com.code.bank.services.interfaces.TransactionService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/transactions")
@@ -44,7 +35,6 @@ public class TransactionController {
 
     private final TransactionService transactionService;
     private final TransactionMapper transactionMapper;
-    private final AccountRepository accountRepository;
 
     @PostMapping
     public Response addTransaction(@RequestBody @Valid TransactionDto transactionDto, String accountNumber) throws Exception{
@@ -98,8 +88,11 @@ public class TransactionController {
             @RequestParam(required = false) TransactionType transactionType,
             @RequestParam(required = false) LocalDateTime fromDate,
             @RequestParam(required = false) LocalDateTime toDate,
-            Pageable pageable
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+
     ) {
+        Pageable pageable = PageRequest.of(page, size);
         return transactionService.searchTransactions(minAmount, maxAmount, transactionType, fromDate, toDate, pageable);
     }
 
