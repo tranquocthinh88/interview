@@ -61,7 +61,7 @@ public class SecurityConfig {
                             author.requestMatchers(HttpMethod.POST, "/api/v1/customers/**").permitAll();
                             author.requestMatchers(HttpMethod.GET,
                                     "/api/v1/customers/{id}",
-                                    "/api/v1/transactions/**").hasAuthority("CUSTOMER");
+                                    "/api/v1/transactions/**").hasAnyAuthority( "ADMIN", "CUSTOMER");
                             author.anyRequest().hasAuthority("ADMIN");
                         }
                 )

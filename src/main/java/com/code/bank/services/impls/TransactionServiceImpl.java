@@ -8,7 +8,8 @@ import com.code.bank.repositories.AccountRepository;
 import com.code.bank.repositories.TransactionRepository;
 import com.code.bank.services.interfaces.TransactionService;
 import com.code.bank.repositories.customizations.TransactionSpecification;
-import com.code.bank.services.interfaces.TransactionService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -39,6 +41,7 @@ public class TransactionServiceImpl extends BaseServiceImpl<Transaction, String>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "transactions", key = "#accountNumber")
     public Transaction createTransaction(String accountNumber, TransactionDto transactionDto) {
         Account senderAccount = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new RuntimeException("Sender account not found"));
@@ -110,6 +113,13 @@ public class TransactionServiceImpl extends BaseServiceImpl<Transaction, String>
                                             transactionType, fromDate, toDate);
         return transactionRepository.findAll(spec, pageable);
     }
+
+    @Override
+    @Cacheable(value = "transactions", key = "#accountId") // Cache lịch sử giao dịch theo accountId
+        public List<Transaction> getTransactionsByAccountId(int accountId) {
+        return transactionRepository.findByAccountId(accountId);
+    }
+
     private double getTransactionFee(TransactionType transactionType) {
         return switch (transactionType) {
             case WITHDRAWAL , TRANSFER -> FEE;

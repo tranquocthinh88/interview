@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TransactionRepository extends BaseRepository<Transaction, String> {
@@ -40,4 +41,7 @@ public interface TransactionRepository extends BaseRepository<Transaction, Strin
             "AND MONTH(trans.transactionDate) IN (:months) " +
             "AND trans.transactionType = :transactionType")
     List<Transaction> findTransactionByQuarter(@Param("months") List<Integer> months,@Param("year") int year, @Param("transactionType")TransactionType transactionType);
+
+    List<Transaction> findByAccountId(int accountId);
+
 }
