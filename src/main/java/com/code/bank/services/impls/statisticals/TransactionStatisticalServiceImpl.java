@@ -4,6 +4,7 @@ import com.code.bank.api.dtos.responses.transaction.TransactionStatisticalRespon
 import com.code.bank.models.enums.TransactionType;
 import com.code.bank.repositories.TransactionRepository;
 import com.code.bank.services.interfaces.statisticals.TransactionStatisticalService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,34 +20,34 @@ public class TransactionStatisticalServiceImpl implements TransactionStatistical
     }
 
     @Override
-    public TransactionStatisticalResponse findTransactionByDate(LocalDate date, TransactionType transactionType) {
+    public TransactionStatisticalResponse findTransactionByDate(LocalDate date, TransactionType transactionType, Pageable pageable) {
         TransactionStatisticalResponse response = new TransactionStatisticalResponse();
         response.setCount(transactionRepository.countTransactionByDay(date, transactionType));
-        response.setTransactions(transactionRepository.findTransactionByDate(date, transactionType));
+        response.setTransactions(transactionRepository.findTransactionByDate(date, transactionType, pageable).getContent());
         return response;
     }
 
     @Override
-    public TransactionStatisticalResponse findTransactionByWeek(LocalDate startDate, LocalDate endDate, TransactionType transactionType) {
+    public TransactionStatisticalResponse findTransactionByWeek(LocalDate startDate, LocalDate endDate, TransactionType transactionType, Pageable pageable) {
         TransactionStatisticalResponse response = new TransactionStatisticalResponse();
         response.setCount(transactionRepository.countTransactionByWeek(startDate, endDate, transactionType));
-        response.setTransactions(transactionRepository.findTransactionByWeek(startDate, endDate, transactionType));
+        response.setTransactions(transactionRepository.findTransactionByWeek(startDate, endDate, transactionType, pageable).getContent());
         return response;
     }
 
     @Override
-    public TransactionStatisticalResponse findTransactionByMonth(int month, int year, TransactionType transactionType) {
+    public TransactionStatisticalResponse findTransactionByMonth(int month, int year, TransactionType transactionType, Pageable pageable) {
         TransactionStatisticalResponse response = new TransactionStatisticalResponse();
         response.setCount(transactionRepository.countTransactionByMonth(month, year, transactionType));
-        response.setTransactions(transactionRepository.findTransactionByMonth(month, year, transactionType));
+        response.setTransactions(transactionRepository.findTransactionByMonth(month, year, transactionType, pageable).getContent());
         return response;
     }
 
     @Override
-    public TransactionStatisticalResponse findTransactionByQuarter(List<Integer> months, int year, TransactionType transactionType) {
+    public TransactionStatisticalResponse findTransactionByQuarter(List<Integer> months, int year, TransactionType transactionType, Pageable pageable) {
         TransactionStatisticalResponse response = new TransactionStatisticalResponse();
         response.setCount(transactionRepository.countTransactionByQuarter(months, year, transactionType));
-        response.setTransactions(transactionRepository.findTransactionByQuarter(months, year, transactionType));
+        response.setTransactions(transactionRepository.findTransactionByQuarter(months, year, transactionType, pageable).getContent());
         return response;
     }
 
