@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface AccountService extends BaseService<Account, Integer>  {
     Optional<Account> findAccountByCustomerId(Integer id);
+    Optional<Account> findAccountByAccountNumber(String accountNumber);
     void changeAccountStatus(String accountNumber, AccountStatus accountNewStatus);
     List<Account> getAllAccountRedis();
     void updateAccountRedis(Account account);

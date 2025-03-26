@@ -89,12 +89,23 @@ public class AccountController {
         );
     }
 
+    @GetMapping("/account-number/{accountNumber}")
+    public Response getAccountByAccountNumber(@PathVariable String accountNumber) throws DataNotFoundException {
+        return new ResponseSuccess<>(
+                HttpStatus.OK.value(),
+                "Get account by account number successfully",
+                accountService.findAccountByAccountNumber(accountNumber)
+                        .orElseThrow(()-> new DataNotFoundException("Account not found"))
+        );
+    }
+
     @GetMapping("/cus/{customerId}")
     public Response getAccountByCustomerId(@PathVariable int customerId) throws DataNotFoundException {
         return new ResponseSuccess<>(
                 HttpStatus.OK.value(),
                 "Get account by customer id successfully",
-                accountService.findAccountByCustomerId(customerId).orElseThrow(()-> new DataNotFoundException("Account not found"))
+                accountService.findAccountByCustomerId(customerId)
+                        .orElseThrow(()-> new DataNotFoundException("Account not found"))
         );
     }
 
@@ -114,17 +125,17 @@ public class AccountController {
         );
     }
 
-    @PutMapping("/{id}")
-    public Response updateAccount(@PathVariable int id ,@RequestBody @Valid AccountDto accountDto) throws Exception {
-        Account account = accountMapper.AccountDto2Account(accountDto);
-        account.setId(id);
-        return new ResponseSuccess<>(HttpStatus.OK.value(),
-                "account updated successfully",
-                accountService.update(id, account));
-    }
+//    @PutMapping("/{id}")
+//    public Response updateAccount(@PathVariable int id ,@RequestBody @Valid AccountDto accountDto) throws Exception {
+//        Account account = accountMapper.AccountDto2Account(accountDto);
+//        account.setId(id);
+//        return new ResponseSuccess<>(HttpStatus.OK.value(),
+//                "account updated successfully",
+//                accountService.update(id, account));
+//    }
 
     @PutMapping("/updateStatus/{accountNumber}")
-    public Response updateAccount(@PathVariable String accountNumber ,@RequestBody AccountStatus accountNewStatus) throws Exception {
+    public Response updateAccount(@PathVariable String accountNumber ,@RequestBody AccountStatus accountNewStatus) {
         accountService.changeAccountStatus(accountNumber, accountNewStatus);
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "status account updated successfully",
