@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,6 +34,8 @@ public class Customer implements Serializable {
     private String permanentAddress;
     @Column(name = "id_card")
     private String idCard;
+    @Column(name = "date_of_issue")
+    private LocalDate dateOfIssue;
     @Column(name = "date_of_birth")
     private LocalDateTime dateOfBirth;
 }

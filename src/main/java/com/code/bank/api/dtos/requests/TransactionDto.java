@@ -14,8 +14,8 @@ public class TransactionDto {
     private TransactionType transactionType;
     @NotNull(message = "amount must be not null")
     private double amount;
-    private LocalDateTime transactionDate;
     @NotNull(message = "location must be not null")
     private String location;
     private String receiverAccountNumber;
+    private String receiverName;
 }

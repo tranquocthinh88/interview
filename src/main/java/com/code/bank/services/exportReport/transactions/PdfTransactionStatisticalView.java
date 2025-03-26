@@ -66,7 +66,7 @@ public class PdfTransactionStatisticalView extends AbstractPdfView {
             table.addCell(new PdfPCell(new Phrase(String.valueOf(transaction.getTransactionDate()), unicodeFont)));
             table.addCell(new PdfPCell(new Phrase(String.valueOf(transaction.getFee()), unicodeFont)));
             table.addCell(new PdfPCell(new Phrase(transaction.getLocation(), unicodeFont)));
-            table.addCell(new PdfPCell(new Phrase(transaction.getReceiverAccount(), unicodeFont)));
+            table.addCell(new PdfPCell(new Phrase(transaction.getReceiverAccountNumber(), unicodeFont)));
         }
         document.add(table);
     }

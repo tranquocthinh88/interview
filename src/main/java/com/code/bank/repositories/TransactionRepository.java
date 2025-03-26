@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,5 +44,9 @@ public interface TransactionRepository extends BaseRepository<Transaction, Strin
             "AND MONTH(trans.transactionDate) IN (:months) " +
             "AND trans.transactionType = :transactionType")
     Page<Transaction> findTransactionByQuarter(@Param("months") List<Integer> months, @Param("year") int year, @Param("transactionType")TransactionType transactionType, Pageable pageable);
+
     List<Transaction> findByAccountId(int accountId);
+
+    @Query("SELECT t FROM Transaction t WHERE t.account.id = :accountId AND t.transactionDate >= :fromTime ORDER BY t.transactionDate DESC")
+    List<Transaction> findRecentTransactions(@Param("accountId") Integer accountId, @Param("fromTime") LocalDateTime fromTime);
 }

@@ -78,7 +78,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
                         if(recurring.getTransactionType() == TransactionType.TRANSFER) {
                             if (account.getBalance() > amount ) {
                                 account.setBalance(account.getBalance() - amount);
-                                transaction.setReceiverAccount(recurring.getReceiverAccount());
+                                transaction.setReceiverAccountNumber(recurring.getReceiverAccount());
                                 transaction.setFee(1000);
                             } else {
                                 System.out.println("Không đủ số dư cho giao dịch: " + recurring.getId());

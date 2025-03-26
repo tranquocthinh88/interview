@@ -2,9 +2,12 @@ package com.code.bank.services.impls;
 
 import com.code.bank.api.dtos.requests.TransactionDto;
 import com.code.bank.models.Account;
+import com.code.bank.models.Alert;
 import com.code.bank.models.Transaction;
+import com.code.bank.models.enums.AlertStatus;
 import com.code.bank.models.enums.TransactionType;
 import com.code.bank.repositories.AccountRepository;
+import com.code.bank.repositories.AlertRepository;
 import com.code.bank.repositories.TransactionRepository;
 import com.code.bank.services.interfaces.TransactionService;
 import com.code.bank.repositories.customizations.TransactionSpecification;
@@ -27,16 +30,18 @@ public class TransactionServiceImpl extends BaseServiceImpl<Transaction, String>
 
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
+    private final AlertRepository alertRepository;
 
     private static final double FEE = 1000.0;
     private static final double DEPOSIT_FEE = 0.0;
 
     public TransactionServiceImpl(JpaRepository<Transaction, String> repository,
                                   TransactionRepository transactionRepository,
-                                  AccountRepository accountRepository) {
+                                  AccountRepository accountRepository, AlertRepository alertRepository) {
         super(repository, Transaction.class);
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
+        this.alertRepository = alertRepository;
     }
 
     @Override
@@ -59,20 +64,25 @@ public class TransactionServiceImpl extends BaseServiceImpl<Transaction, String>
             receiverAccount = accountRepository.findByAccountNumber(transactionDto.getReceiverAccountNumber())
                     .orElseThrow(() -> new RuntimeException("Receiver account not found"));
 
-            // Kiểm tra số dư tài khoản gửi
-            if (totalAmount + 50000 > senderAccount.getBalance()) {
-                throw new RuntimeException("Insufficient balance for transfer!");
+            if (transactionDto.getReceiverName().equals(receiverAccount.getCustomer().getFullName())) {
+                // Kiểm tra số dư tài khoản gửi
+                if (totalAmount + 50000 > senderAccount.getBalance()) {
+                    throw new RuntimeException("Insufficient balance for transfer!");
+                }
+
+                if (totalAmount > senderAccount.getTransactionLimit()) {
+                    throw new RuntimeException("Transaction exceeds limit!");
+                }
+
+                // Trừ tiền từ tài khoản gửi
+                senderAccount.setBalance(senderAccount.getBalance() - totalAmount);
+
+                // Cộng tiền vào tài khoản nhận
+                receiverAccount.setBalance(receiverAccount.getBalance() + transactionDto.getAmount());
             }
+            else
+                throw new RuntimeException("Receiver name does not match");
 
-            if (totalAmount > senderAccount.getTransactionLimit()) {
-                throw new RuntimeException("Transaction exceeds limit!");
-            }
-
-            // Trừ tiền từ tài khoản gửi
-            senderAccount.setBalance(senderAccount.getBalance() - totalAmount);
-
-            // Cộng tiền vào tài khoản nhận
-            receiverAccount.setBalance(receiverAccount.getBalance() + transactionDto.getAmount());
         } else if (transactionDto.getTransactionType() == TransactionType.WITHDRAWAL) {
             if (totalAmount + 50000 > senderAccount.getBalance()) {
                 throw new RuntimeException("Insufficient balance for withdrawal!");
@@ -94,7 +104,8 @@ public class TransactionServiceImpl extends BaseServiceImpl<Transaction, String>
         transaction.setFee(transactionFee);
         transaction.setLocation(transactionDto.getLocation());
         transaction.setTransactionDate(LocalDateTime.now());
-        transaction.setReceiverAccount(transactionDto.getReceiverAccountNumber());
+        transaction.setReceiverAccountNumber(transactionDto.getReceiverAccountNumber());
+        transaction.setReceiverName(transactionDto.getReceiverName());
 
         // Lưu giao dịch và cập nhật tài khoản
         transactionRepository.save(transaction);
@@ -102,6 +113,9 @@ public class TransactionServiceImpl extends BaseServiceImpl<Transaction, String>
         if (receiverAccount != null) {
             accountRepository.save(receiverAccount);
         }
+
+        detectSuspiciousTransaction(senderAccount, transaction);
+
 
         return transaction;
     }
@@ -126,5 +140,31 @@ public class TransactionServiceImpl extends BaseServiceImpl<Transaction, String>
             case DEPOSIT -> DEPOSIT_FEE;
             default -> throw new IllegalArgumentException("Invalid transaction type");
         };
+    }
+
+    private void detectSuspiciousTransaction(Account account, Transaction transaction) {
+        boolean isSuspicious = false;
+        String reason = "";
+
+        double thresholdAmount = 100_000_000;
+        if (transaction.getAmount() > thresholdAmount) {
+            isSuspicious = true;
+            reason = "Số tiền giao dịch lớn hơn " + thresholdAmount;
+        }
+
+        LocalDateTime oneMinuteAgo = LocalDateTime.now().minusMinutes(1);
+        List<Transaction> recentTransactions = transactionRepository.findRecentTransactions(account.getId(), oneMinuteAgo);
+        if (recentTransactions.size() >= 3) { // Nếu có >= 5 giao dịch trong 1 phút
+            isSuspicious = true;
+            reason += " | Giao dịch liên tiếp trong thời gian ngắn";
+        }
+
+        if (isSuspicious) {
+            Alert alert = new Alert();
+            alert.setTransaction(transaction);
+            alert.setReason(reason);
+            alert.setAlertStatus(AlertStatus.TRIGGERED);
+            alertRepository.save(alert);
+        }
     }
 }
