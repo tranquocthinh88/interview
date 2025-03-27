@@ -51,5 +51,13 @@ public class TransactionStatisticalServiceImpl implements TransactionStatistical
         return response;
     }
 
+    @Override
+    public TransactionStatisticalResponse findTransactionByYear(int year, TransactionType transactionType, Pageable pageable) {
+        TransactionStatisticalResponse response = new TransactionStatisticalResponse();
+        response.setCount(transactionRepository.countTransactionByYear(year, transactionType));
+        response.setTransactions(transactionRepository.findTransactionByYear(year, transactionType, pageable).getContent());
+        return response;
+    }
+
 
 }

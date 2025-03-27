@@ -45,28 +45,31 @@ public class PdfTransactionStatisticalView extends AbstractPdfView {
         Font headFont = new Font(baseFont, 12, Font.BOLD);
         headFont.setColor(Color.WHITE);
 
-        PdfPTable table = new PdfPTable(7);
+        PdfPTable table = new PdfPTable(10);
         table.setWidthPercentage(100);
         table.setSpacingBefore(10);
-        table.setWidths(new float[]{2, 3.5f, 4, 4, 2.5f, 4, 4});
+        table.setWidths(new float[]{2, 4, 4, 3.5f, 4, 4, 2.5f, 4, 4, 4});
 
         PdfPCell hcell;
-        String[] headers = {"ID", "Type", "Amount", "Date", "Fee", "Location", "Receiver Account"};
+        String[] headers = {"ID","Sender Account", "Sender Name", "Type", "Amount", "Date", "Fee", "Location", "Receiver Account", "Receiver Name"};
         for (String header : headers) {
             hcell = new PdfPCell(new Phrase(header, headFont));
             hcell.setBackgroundColor(Color.BLUE);
-            hcell.setPadding(7);
+            hcell.setPadding(10);
             table.addCell(hcell);
         }
 
         for (Transaction transaction : transactions) {
             table.addCell(new PdfPCell(new Phrase(transaction.getId(), unicodeFont)));
+            table.addCell(new PdfPCell(new Phrase(transaction.getAccount().getAccountNumber(), unicodeFont)));
+            table.addCell(new PdfPCell(new Phrase(transaction.getAccount().getCustomer().getFullName(), unicodeFont)));
             table.addCell(new PdfPCell(new Phrase(String.valueOf(transaction.getTransactionType()), unicodeFont)));
             table.addCell(new PdfPCell(new Phrase(String.valueOf(transaction.getAmount()), unicodeFont)));
             table.addCell(new PdfPCell(new Phrase(String.valueOf(transaction.getTransactionDate()), unicodeFont)));
             table.addCell(new PdfPCell(new Phrase(String.valueOf(transaction.getFee()), unicodeFont)));
             table.addCell(new PdfPCell(new Phrase(transaction.getLocation(), unicodeFont)));
             table.addCell(new PdfPCell(new Phrase(transaction.getReceiverAccountNumber(), unicodeFont)));
+            table.addCell(new PdfPCell(new Phrase(transaction.getReceiverName(), unicodeFont)));
         }
         document.add(table);
     }

@@ -1,4 +1,4 @@
-package com.code.bank.api.statisticals;
+package com.code.bank.api.controllers.statisticals;
 
 import com.code.bank.api.dtos.responses.Response;
 import com.code.bank.api.dtos.responses.ResponseSuccess;

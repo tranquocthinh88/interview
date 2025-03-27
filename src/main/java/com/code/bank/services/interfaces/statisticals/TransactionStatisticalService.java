@@ -13,4 +13,5 @@ public interface TransactionStatisticalService {
     TransactionStatisticalResponse findTransactionByWeek(LocalDate startDate,LocalDate endDate, TransactionType transactionType, Pageable pageable);
     TransactionStatisticalResponse findTransactionByMonth(int month, int year, TransactionType transactionType, Pageable pageable);
     TransactionStatisticalResponse findTransactionByQuarter(List<Integer> months, int year, TransactionType transactionType, Pageable pageable);
+    TransactionStatisticalResponse findTransactionByYear(int year, TransactionType transactionType, Pageable pageable);
 }
