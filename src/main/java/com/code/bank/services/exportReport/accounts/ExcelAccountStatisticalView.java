@@ -27,7 +27,7 @@ public class ExcelAccountStatisticalView extends AbstractXlsxView {
         Sheet sheet = workbook.createSheet("Accounts");
         Row header = sheet.createRow(0);
 
-        String[] columns = {"ID", "Account Number", "Balance(VND)", "Status", "Open Date", "Customer ID"};
+        String[] columns = {"ID", "Account Number", "Full Name", "Balance(VND)", "Status", "Open Date"};
         for (int i = 0; i < columns.length; i++) {
             header.createCell(i).setCellValue(columns[i]);
         }
@@ -36,11 +36,11 @@ public class ExcelAccountStatisticalView extends AbstractXlsxView {
         for (Account account : accounts) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(account.getId());
-            row.createCell(1).setCellValue(account.getAccountNumber());
-            row.createCell(2).setCellValue(account.getBalance());
-            row.createCell(3).setCellValue(account.getAccountStatus().name());
-            row.createCell(4).setCellValue(account.getOpenDate().toString());
-            row.createCell(5).setCellValue(account.getCustomer().getId());
+            row.createCell(1).setCellValue(account.getCustomer().getFullName());
+            row.createCell(2).setCellValue(account.getAccountNumber());
+            row.createCell(3).setCellValue(account.getBalance());
+            row.createCell(4).setCellValue(account.getAccountStatus().name());
+            row.createCell(5).setCellValue(account.getOpenDate().toString());
         }
     }
 }
