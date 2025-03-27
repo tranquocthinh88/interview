@@ -8,5 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {
     @Mapping(source = "gender", target = "gender")
+    @Mapping(source = "dateOfIssue", target = "dateOfIssue")
     Customer CustomerDto2Customer(CustomerDto customerDto);
 }

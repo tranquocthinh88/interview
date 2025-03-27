@@ -6,9 +6,11 @@ import com.code.bank.api.dtos.responses.LoginResponse;
 import com.code.bank.api.exceptions.DataExistsException;
 import com.code.bank.api.exceptions.DataNotFoundException;
 import com.code.bank.models.CustomUserDetails;
+import com.code.bank.models.Customer;
 import com.code.bank.models.Token;
 import com.code.bank.models.UserAccount;
 import com.code.bank.models.enums.Role;
+import com.code.bank.repositories.CustomerRepository;
 import com.code.bank.repositories.TokenRepository;
 import com.code.bank.repositories.UserAccountRepository;
 import com.code.bank.services.interfaces.AuthService;
@@ -37,6 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -71,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    private UserAccount mapperToUser(UserRegisterDto userRegisterDto) throws DataExistsException {
+    private UserAccount mapperToUser(UserRegisterDto userRegisterDto) throws DataExistsException, DataNotFoundException {
 
         Optional<UserAccount> userAccount = userAccountRepository.findByUsername(userRegisterDto.getUsername());
         UserAccount userExist = new UserAccount();
@@ -81,11 +84,15 @@ public class AuthServiceImpl implements AuthService {
             }
             userExist = userAccount.get();
         }
+        Customer customer = customerRepository.findByPhone(userRegisterDto.getUsername())
+                .orElseThrow(() -> new DataNotFoundException("Customer not found"));
         UserAccount userResult =  UserAccount.builder()
                 .username(userRegisterDto.getUsername())
                 .password(passwordEncoder.encode(userRegisterDto.getPassword()))
                 .username(userRegisterDto.getUsername())
+                .verify(true)
                 .role(Role.CUSTOMER)
+                .customer(customer)
                 .build();
         userResult.setId(userExist.getId());
         return userResult;

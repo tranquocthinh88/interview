@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CustomerRepository extends BaseRepository<Customer, Integer> {
     @Query("select COUNT(cs) from Account ac \n" +
@@ -18,4 +20,6 @@ public interface CustomerRepository extends BaseRepository<Customer, Integer> {
             "inner join Address ad on ad.id = ac.address.id \n" +
             "where ad.city like %?1% or ad.district like %?1% or ad.ward like %?1% or ad.street like %?1% or ad.addressDetail like %?1%")
     Page<Customer> findCustomersByLocation(String location, Pageable pageable);
+
+    Optional<Customer> findByPhone(String phone);
 }

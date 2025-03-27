@@ -154,7 +154,7 @@ public class TransactionServiceImpl extends BaseServiceImpl<Transaction, String>
 
         LocalDateTime oneMinuteAgo = LocalDateTime.now().minusMinutes(1);
         List<Transaction> recentTransactions = transactionRepository.findRecentTransactions(account.getId(), oneMinuteAgo);
-        if (recentTransactions.size() >= 3) { // Nếu có >= 5 giao dịch trong 1 phút
+        if (recentTransactions.size() >= 5) { // Nếu có >= 5 giao dịch trong 1 phút
             isSuspicious = true;
             reason += " | Giao dịch liên tiếp trong thời gian ngắn";
         }
