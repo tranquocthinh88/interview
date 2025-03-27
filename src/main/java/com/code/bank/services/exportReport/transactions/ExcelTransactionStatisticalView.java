@@ -40,7 +40,7 @@ public class ExcelTransactionStatisticalView extends AbstractXlsxView {
             row.createCell(3).setCellValue(transaction.getTransactionDate());
             row.createCell(4).setCellValue(transaction.getFee());
             row.createCell(5).setCellValue(transaction.getLocation());
-            row.createCell(6).setCellValue(transaction.getReceiverAccount());
+            row.createCell(6).setCellValue(transaction.getReceiverAccountNumber());
         }
     }
 }

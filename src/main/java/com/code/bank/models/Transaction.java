@@ -30,8 +30,10 @@ public class Transaction implements Serializable {
     private double fee;
     @Column(name = "location")
     private String location;
-    @Column(name = "receiver_account")
-    private String receiverAccount;
+    @Column(name = "receiver_account_number")
+    private String receiverAccountNumber;
+    @Column(name = "receiver_name")
+    private String receiverName;
 
     @ManyToOne // tối ưu dữ liệu, khi cần mới lấy
     @JoinColumn(name = "account_id", nullable = false)

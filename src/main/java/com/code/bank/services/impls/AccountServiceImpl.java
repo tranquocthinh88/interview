@@ -41,6 +41,11 @@ public class AccountServiceImpl extends BaseServiceImpl<Account, Integer> implem
     }
 
     @Override
+    public Optional<Account> findAccountByAccountNumber(String accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber);
+    }
+
+    @Override
     public void changeAccountStatus(String accountNumber, AccountStatus accountNewStatus) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new RuntimeException("Account not found"));

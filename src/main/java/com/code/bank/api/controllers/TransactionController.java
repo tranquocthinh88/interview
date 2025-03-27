@@ -65,21 +65,21 @@ public class TransactionController {
                 "delete transaction successfully" + id);
     }
 
-    @PutMapping("/{id}")
-    public Response updateTransaction(@PathVariable String id, @RequestBody @Valid TransactionDto transactionDto) throws Exception {
-        Transaction transaction = transactionMapper.Transaction2DtoTransaction(transactionDto);
-        transaction.setId(id);
-        return new ResponseSuccess<>(HttpStatus.OK.value(),
-                "update transaction successfully",
-                transactionService.update(id, transaction));
-    }
-
-    @PatchMapping("/{id}")
-    public Response patchTransaction(@PathVariable String id, @RequestBody @Valid Map<String, ?> data) throws Exception {
-        return new ResponseSuccess<>(HttpStatus.OK.value(),
-                "update transaction successfully",
-                transactionService.updatePatch(id,data));
-    }
+//    @PutMapping("/{id}")
+//    public Response updateTransaction(@PathVariable String id, @RequestBody @Valid TransactionDto transactionDto) throws Exception {
+//        Transaction transaction = transactionMapper.Transaction2DtoTransaction(transactionDto);
+//        transaction.setId(id);
+//        return new ResponseSuccess<>(HttpStatus.OK.value(),
+//                "update transaction successfully",
+//                transactionService.update(id, transaction));
+//    }
+//
+//    @PatchMapping("/{id}")
+//    public Response patchTransaction(@PathVariable String id, @RequestBody @Valid Map<String, ?> data) throws Exception {
+//        return new ResponseSuccess<>(HttpStatus.OK.value(),
+//                "update transaction successfully",
+//                transactionService.updatePatch(id,data));
+//    }
 
     @GetMapping("/search")
     public Page<Transaction> searchTransactions(

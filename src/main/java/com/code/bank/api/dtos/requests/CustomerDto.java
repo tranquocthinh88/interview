@@ -4,10 +4,12 @@ import com.code.bank.models.enums.Gender;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -29,4 +31,6 @@ public class CustomerDto {
     private String idCard;
     @NotNull(message = "date of birth must be not null")
     private LocalDateTime dateOfBirth;
+    @Past(message = "date of issue must be past")
+    private LocalDate dateOfIssue;
 }
