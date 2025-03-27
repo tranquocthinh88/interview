@@ -29,12 +29,8 @@ public class UserAccount {
     @Column(name = "otp_expiry_time")
     private LocalDateTime otpExpiryTime;
     @Column(name = "verify")
-    private boolean verify;
+    private boolean verify = true;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-//    public boolean isPresent() {
-//
-//    }
 }

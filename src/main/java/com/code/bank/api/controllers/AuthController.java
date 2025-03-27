@@ -43,7 +43,7 @@ public class AuthController {
         return new ResponseSuccess<>(
                 HttpStatus.CREATED.value(),
                 "User registered successfully",
-                "Check OTP in your email"
+                "Check OTP in your phone"
         );
     }
 
