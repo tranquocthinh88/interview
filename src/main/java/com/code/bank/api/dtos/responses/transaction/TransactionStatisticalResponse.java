@@ -15,5 +15,8 @@ import java.util.List;
 public class TransactionStatisticalResponse implements Serializable {
     private long count;
     private List<Transaction> transactions;
+    private double average;
+    private double max;
+    private double min;
 
 }

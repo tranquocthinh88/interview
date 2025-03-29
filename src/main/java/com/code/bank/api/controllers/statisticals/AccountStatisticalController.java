@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/api/v1/statistical/accounts")
 @RequiredArgsConstructor
 @SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
-public class AccountStatistical {
+public class AccountStatisticalController {
 
     private final AccountStatisticalService accountStatisticalService;
 

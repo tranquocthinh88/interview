@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping("/api/v1/statistical/transaction")
 @RequiredArgsConstructor
 @SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
-public class TransactionStatistical {
+public class TransactionStatisticalController {
 
     private final TransactionStatisticalService transactionStatisticalService;
 

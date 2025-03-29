@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface TransactionStatisticalService {
     TransactionStatisticalResponse findTransactionByDate(LocalDate date, TransactionType transactionType, Pageable pageable);
