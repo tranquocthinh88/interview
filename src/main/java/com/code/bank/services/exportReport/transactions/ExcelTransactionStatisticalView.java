@@ -26,7 +26,7 @@ public class ExcelTransactionStatisticalView extends AbstractXlsxView {
         Sheet sheet = workbook.createSheet("Transactions");
         Row header = sheet.createRow(0);
 
-        String[] columns = {"ID", "Type", "Amount", "Date", "Fee", "Location", "Receiver Account"};
+        String[] columns = {"ID", "Sender Account", "Sender Name", "Type", "Amount", "Date", "Fee", "Location", "Receiver Account", "Receiver Name"};
         for (int i = 0; i < columns.length; i++) {
             header.createCell(i).setCellValue(columns[i]);
         }
@@ -35,12 +35,15 @@ public class ExcelTransactionStatisticalView extends AbstractXlsxView {
         for (Transaction transaction : transactions) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(transaction.getId());
-            row.createCell(1).setCellValue(transaction.getTransactionType().toString());
-            row.createCell(2).setCellValue(transaction.getAmount());
-            row.createCell(3).setCellValue(transaction.getTransactionDate());
-            row.createCell(4).setCellValue(transaction.getFee());
-            row.createCell(5).setCellValue(transaction.getLocation());
-            row.createCell(6).setCellValue(transaction.getReceiverAccountNumber());
+            row.createCell(1).setCellValue(transaction.getAccount().getAccountNumber());
+            row.createCell(2).setCellValue(transaction.getAccount().getCustomer().getFullName());
+            row.createCell(3).setCellValue(transaction.getTransactionType().toString());
+            row.createCell(4).setCellValue(transaction.getAmount());
+            row.createCell(5).setCellValue(transaction.getTransactionDate().toString());
+            row.createCell(6).setCellValue(transaction.getFee());
+            row.createCell(7).setCellValue(transaction.getLocation());
+            row.createCell(8).setCellValue(transaction.getReceiverAccountNumber());
+            row.createCell(9).setCellValue(transaction.getReceiverName());
         }
     }
 }

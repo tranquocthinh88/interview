@@ -1,4 +1,4 @@
-package com.code.bank.api.statisticals;
+package com.code.bank.api.controllers.statisticals;
 
 import com.code.bank.api.dtos.responses.Response;
 import com.code.bank.api.dtos.responses.ResponseSuccess;
@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/api/v1/statistical/accounts")
 @RequiredArgsConstructor
 @SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
-public class AccountStatistical {
+public class AccountStatisticalController {
 
     private final AccountStatisticalService accountStatisticalService;
 

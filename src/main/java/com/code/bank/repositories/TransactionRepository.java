@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface TransactionRepository extends BaseRepository<Transaction, String> {
@@ -22,16 +21,20 @@ public interface TransactionRepository extends BaseRepository<Transaction, Strin
     Page<Transaction> findTransactionByDate(@Param("date") LocalDate date, @Param("transactionType")TransactionType transactionType, Pageable pageable);
 
     // Thống kê theo tuần cùng với loại giao dịch (DEPOSIT, WITHDRAWAL, TRANSFER)
-    @Query("SELECT COUNT(trans) FROM Transaction trans WHERE trans.transactionDate BETWEEN :startDate AND :endDate AND trans.transactionType = :transactionType")
+    @Query("SELECT COUNT(trans) FROM Transaction trans " +
+            "WHERE DATE(trans.transactionDate) BETWEEN :startDate AND :endDate " +
+            "AND trans.transactionType = :transactionType")
     long countTransactionByWeek(@Param("startDate") LocalDate startDate, @Param("endDate")LocalDate endDate, @Param("transactionType")TransactionType transactionType);
-    @Query("SELECT trans FROM Transaction trans WHERE trans.transactionDate BETWEEN :startDate AND :endDate AND trans.transactionType = :transactionType")
+    @Query("SELECT trans FROM Transaction trans " +
+            "WHERE DATE(trans.transactionDate) BETWEEN :startDate AND :endDate " +
+            "AND trans.transactionType = :transactionType")
     Page<Transaction> findTransactionByWeek(@Param("startDate") LocalDate startDate, @Param("endDate")LocalDate endDate, @Param("transactionType")TransactionType transactionType, Pageable pageable);
 
     // Thống kê theo tháng cùng với loại giao dịch (DEPOSIT, WITHDRAWAL, TRANSFER)
-    @Query("SELECT COUNT(trans) FROM Transaction trans WHERE YEAR(trans.transactionDate) = :year AND MONTH(trans.transactionDate) = :month AND trans.transactionType = :transactionType")
-    long countTransactionByMonth(@Param("year") int year, @Param("month") int month, @Param("transactionType")TransactionType transactionType);
-    @Query("SELECT trans FROM Transaction trans WHERE YEAR(trans.transactionDate) = :year AND MONTH(trans.transactionDate) = :month AND trans.transactionType = :transactionType")
-    Page<Transaction> findTransactionByMonth(@Param("year") int year, @Param("month") int month, @Param("transactionType")TransactionType transactionType, Pageable pageable);
+    @Query("SELECT COUNT(trans) FROM Transaction trans WHERE MONTH(trans.transactionDate) = :month AND YEAR(trans.transactionDate) = :year AND trans.transactionType = :transactionType")
+    long countTransactionByMonth(@Param("month") int month, @Param("year") int year, @Param("transactionType")TransactionType transactionType);
+    @Query("SELECT trans FROM Transaction trans WHERE MONTH(trans.transactionDate) = :month AND YEAR(trans.transactionDate) = :year AND trans.transactionType = :transactionType")
+    Page<Transaction> findTransactionByMonth(@Param("month") int month, @Param("year") int year, @Param("transactionType")TransactionType transactionType, Pageable pageable);
 
     // Thống kê theo quý cùng với loại giao dịch (DEPOSIT, WITHDRAWAL, TRANSFER)
     @Query("SELECT COUNT(trans) FROM Transaction trans " +
@@ -44,6 +47,35 @@ public interface TransactionRepository extends BaseRepository<Transaction, Strin
             "AND MONTH(trans.transactionDate) IN (:months) " +
             "AND trans.transactionType = :transactionType")
     Page<Transaction> findTransactionByQuarter(@Param("months") List<Integer> months, @Param("year") int year, @Param("transactionType")TransactionType transactionType, Pageable pageable);
+
+    @Query("SELECT COUNT(trans) FROM Transaction trans " +
+            "WHERE YEAR(trans.transactionDate) = :year " +
+            "AND trans.transactionType = :transactionType")
+    long countTransactionByYear(@Param("year") int year, @Param("transactionType")TransactionType transactionType);
+    @Query("SELECT trans FROM Transaction trans " +
+            "WHERE YEAR(trans.transactionDate) = :year " +
+            "AND trans.transactionType = :transactionType")
+    Page<Transaction> findTransactionByYear(@Param("year") int year, @Param("transactionType")TransactionType transactionType, Pageable pageable);
+
+    // dùng để thống kê doanh số giao dịch (tb, thấp, cao)
+    @Query("SELECT trans FROM Transaction trans WHERE FUNCTION('DATE', trans.transactionDate) = FUNCTION('DATE', :date) AND trans.transactionType = :transactionType")
+    List<Transaction> findAllByDate(@Param("date") LocalDate date, @Param("transactionType") TransactionType transactionType);
+    @Query("SELECT trans FROM Transaction trans " +
+            "WHERE DATE(trans.transactionDate) BETWEEN :startDate AND :endDate " +
+            "AND trans.transactionType = :transactionType")
+    List<Transaction> findAllByWeek(@Param("startDate") LocalDate startDate, @Param("endDate")LocalDate endDate, @Param("transactionType")TransactionType transactionType);
+    @Query("SELECT trans FROM Transaction trans WHERE MONTH(trans.transactionDate) = :month AND YEAR(trans.transactionDate) = :year AND trans.transactionType = :transactionType")
+    List<Transaction> findAllByMonth(@Param("month") int month, @Param("year") int year, @Param("transactionType")TransactionType transactionType);
+    @Query("SELECT trans FROM Transaction trans " +
+            "WHERE YEAR(trans.transactionDate) = :year " +
+            "AND MONTH(trans.transactionDate) IN (:months) " +
+            "AND trans.transactionType = :transactionType")
+    List<Transaction> findAllByQuarter(@Param("months") List<Integer> months, @Param("year") int year, @Param("transactionType")TransactionType transactionType);
+    @Query("SELECT trans FROM Transaction trans " +
+            "WHERE YEAR(trans.transactionDate) = :year " +
+            "AND trans.transactionType = :transactionType")
+    List<Transaction> findAllByYear(@Param("year") int year, @Param("transactionType")TransactionType transactionType);
+
 
     List<Transaction> findByAccountId(int accountId);
 

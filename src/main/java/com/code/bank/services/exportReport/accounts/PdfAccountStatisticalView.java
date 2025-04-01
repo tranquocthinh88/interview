@@ -4,6 +4,7 @@ import com.code.bank.api.dtos.responses.account.AccountStatisticalResponse;
 import com.code.bank.models.Account;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
+import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -41,16 +42,19 @@ public class PdfAccountStatisticalView extends AbstractPdfView {
         title.setSpacingAfter(10);
         document.add(title);
 
+        // Load font hỗ trợ tiếng Việt
+        BaseFont baseFont = BaseFont.createFont("src/main/resources/fonts/arial-unicode-ms.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font unicodeFont = new Font(baseFont, 12, Font.NORMAL);
+        Font headFont = new Font(baseFont, 12, Font.BOLD);
+        headFont.setColor(Color.WHITE);
+
         PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100);
         table.setSpacingBefore(10);
-        table.setWidths(new float[]{1.5f, 3, 3.5f, 2, 5, 3});
+        table.setWidths(new float[]{1.5f, 5, 3.5f, 3.5f, 2, 3});
 
-        Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-        headFont.setColor(Color.WHITE);
         PdfPCell hcell;
-
-        String[] headers = {"ID", "Account Number", "Balance(VND)", "Status", "Open Date", "Customer ID"};
+        String[] headers = {"ID", "Full Name", "Account Number", "Balance(VND)", "Status", "Open Date"};
         for (String header : headers) {
             hcell = new PdfPCell(new Phrase(header, headFont));
             hcell.setBackgroundColor(Color.BLUE);
@@ -59,12 +63,12 @@ public class PdfAccountStatisticalView extends AbstractPdfView {
         }
 
         for (Account account : accounts) {
-            table.addCell(String.valueOf(account.getId()));
-            table.addCell(account.getAccountNumber());
-            table.addCell(String.valueOf(account.getBalance()));
-            table.addCell(account.getAccountStatus().name());
-            table.addCell(account.getOpenDate().toString());
-            table.addCell(String.valueOf(account.getCustomer().getId()));
+            table.addCell(new PdfPCell(new Phrase(String.valueOf(account.getId()), unicodeFont)));
+            table.addCell(new PdfPCell(new Phrase(account.getCustomer().getFullName(), unicodeFont)));
+            table.addCell(new PdfPCell(new Phrase(String.valueOf(account.getAccountNumber()), unicodeFont)));
+            table.addCell(new PdfPCell(new Phrase(String.valueOf(account.getBalance()), unicodeFont)));
+            table.addCell(new PdfPCell(new Phrase(account.getAccountStatus().toString(), unicodeFont)));
+            table.addCell(new PdfPCell(new Phrase(account.getOpenDate().toString(), unicodeFont)));
         }
 
         document.add(table);

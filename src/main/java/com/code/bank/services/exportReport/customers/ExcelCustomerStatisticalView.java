@@ -42,7 +42,7 @@ public class ExcelCustomerStatisticalView extends AbstractXlsxView {
             row.createCell(4).setCellValue(customer.getGender().toString());
             row.createCell(5).setCellValue(customer.getTemporaryAddress());
             row.createCell(6).setCellValue(customer.getIdCard());
-            row.createCell(7).setCellValue(customer.getDateOfBirth());
+            row.createCell(7).setCellValue(customer.getDateOfBirth().toString());
         }
     }
 }

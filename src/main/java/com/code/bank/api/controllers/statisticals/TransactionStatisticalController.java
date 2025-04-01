@@ -1,4 +1,4 @@
-package com.code.bank.api.statisticals;
+package com.code.bank.api.controllers.statisticals;
 
 import com.code.bank.api.dtos.responses.Response;
 import com.code.bank.api.dtos.responses.ResponseSuccess;
@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping("/api/v1/statistical/transaction")
 @RequiredArgsConstructor
 @SecurityRequirements({@SecurityRequirement(name = "bearerAuth")})
-public class TransactionStatistical {
+public class TransactionStatisticalController {
 
     private final TransactionStatisticalService transactionStatisticalService;
 
@@ -81,6 +81,17 @@ public class TransactionStatistical {
                 transactionStatisticalService.findTransactionByQuarter(months, year, transactionType, pageable));
     }
 
+    @GetMapping("/year")
+    public Response findTransactionByYear(@RequestParam int year,
+                                           TransactionType transactionType,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return new ResponseSuccess<>(HttpStatus.OK.value(),
+                "Get quantity transaction by month successfully",
+                transactionStatisticalService.findTransactionByYear(year, transactionType, pageable));
+    }
+
     @GetMapping("/date/export-excel")
     public ModelAndView exportTransactionByDateExcel(@RequestParam LocalDate date, TransactionType transactionType,
                                                      @RequestParam(defaultValue = "0") int page,
@@ -129,6 +140,17 @@ public class TransactionStatistical {
         Pageable pageable = PageRequest.of(page, size);
         ModelAndView mav = new ModelAndView(new ExcelTransactionStatisticalView());
         mav.addObject("data", transactionStatisticalService.findTransactionByQuarter(months, year, transactionType, pageable));
+        return mav;
+    }
+
+    @GetMapping("/year/export-excel")
+    public ModelAndView exportTransactionByYearExcel(@RequestParam int year,
+                                          TransactionType transactionType,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        ModelAndView mav = new ModelAndView(new ExcelTransactionStatisticalView());
+        mav.addObject("data", transactionStatisticalService.findTransactionByYear(year, transactionType, pageable));
         return mav;
     }
 
@@ -183,4 +205,14 @@ public class TransactionStatistical {
         return mav;
     }
 
+    @GetMapping("/year/export-pdf")
+    public ModelAndView exportTransactionByYearPdf(@RequestParam int year,
+                                                     TransactionType transactionType,
+                                                     @RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        ModelAndView mav = new ModelAndView(new PdfTransactionStatisticalView());
+        mav.addObject("data", transactionStatisticalService.findTransactionByYear(year, transactionType, pageable));
+        return mav;
+    }
 }
