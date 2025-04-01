@@ -56,12 +56,15 @@ public class SecurityConfig {
                             author.requestMatchers("/v3/api-docs/**",
                                     "/swagger-ui/**",
                                     "/swagger-ui.html",
-                                    "/api/v1/auth/**"
+                                    "/api/v1/auth/**",
+                                    "/actuator/**",
+                                    "/api/v1/virtual-thread/**"
                                     ).permitAll();
                             author.requestMatchers(HttpMethod.POST, "/api/v1/customers/**").permitAll();
                             author.requestMatchers(HttpMethod.GET,
                                     "/api/v1/customers/{id}",
-                                    "/api/v1/transactions/**").hasAnyAuthority("ADMIN", "CUSTOMER");
+                                    "/api/v1/transactions/**,",
+                                    "/api/v1/accounts/**").hasAnyAuthority("ADMIN", "CUSTOMER");
                             author.anyRequest().hasAuthority("ADMIN");
                         }
                 )
