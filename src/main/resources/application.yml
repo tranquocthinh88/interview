@@ -26,3 +26,17 @@ spring:
       host: localhost
       port: 6379
       timeout: 6000
+  threads:
+    virtual:
+      enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"   # Mở tất cả endpoint Actuator
+  endpoint:
+    health:
+      show-details: always   # Hiển thị chi tiết thông tin health check
+  metrics:
+    tags:
+      application: BankApplication
