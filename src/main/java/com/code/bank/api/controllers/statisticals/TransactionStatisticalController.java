@@ -2,6 +2,7 @@ package com.code.bank.api.controllers.statisticals;
 
 import com.code.bank.api.dtos.responses.Response;
 import com.code.bank.api.dtos.responses.ResponseSuccess;
+import com.code.bank.models.enums.SortDirection;
 import com.code.bank.models.enums.TransactionType;
 import com.code.bank.services.exportReport.transactions.ExcelTransactionStatisticalView;
 import com.code.bank.services.exportReport.transactions.PdfTransactionStatisticalView;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +35,16 @@ public class TransactionStatisticalController {
     @GetMapping("/date")
     public Response findTransactionByDate(@RequestParam LocalDate date, TransactionType transactionType,
                                           @RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+                                          @RequestParam(defaultValue = "5") int size,
+                                          @RequestParam(defaultValue = "amount") String sortBy,
+                                          @RequestParam(required = false) SortDirection sortDirection) {
+        Pageable pageable;
+        if (sortBy != null && sortDirection != null) {
+            Sort sort = (sortDirection == SortDirection.DESC) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            pageable = PageRequest.of(page, size, sort);
+        } else {
+            pageable = PageRequest.of(page, size);
+        }
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "Get transaction by date successfully",
                 transactionStatisticalService.findTransactionByDate(date, transactionType, pageable));
@@ -45,8 +55,16 @@ public class TransactionStatisticalController {
     public Response findTransactionByWeek(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate,
                                           TransactionType transactionType,
                                           @RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+                                          @RequestParam(defaultValue = "5") int size,
+                                          @RequestParam(defaultValue = "amount") String sortBy,
+                                          @RequestParam(required = false) SortDirection sortDirection) {
+        Pageable pageable;
+        if (sortBy != null && sortDirection != null) {
+            Sort sort = (sortDirection == SortDirection.DESC) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            pageable = PageRequest.of(page, size, sort);
+        } else {
+            pageable = PageRequest.of(page, size);
+        }
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "Get quantity transaction by week successfully",
                 transactionStatisticalService.findTransactionByWeek(startDate, endDate, transactionType, pageable));
@@ -56,8 +74,16 @@ public class TransactionStatisticalController {
     public Response findTransactionByMonth(@RequestParam int month, @RequestParam int year,
                                            TransactionType transactionType,
                                            @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+                                           @RequestParam(defaultValue = "5") int size,
+                                           @RequestParam(defaultValue = "amount") String sortBy,
+                                           @RequestParam(required = false) SortDirection sortDirection) {
+        Pageable pageable;
+        if (sortBy != null && sortDirection != null) {
+            Sort sort = (sortDirection == SortDirection.DESC) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            pageable = PageRequest.of(page, size, sort);
+        } else {
+            pageable = PageRequest.of(page, size);
+        }
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "Get quantity transaction by month successfully",
                 transactionStatisticalService.findTransactionByMonth(month, year, transactionType, pageable));
@@ -67,7 +93,9 @@ public class TransactionStatisticalController {
     public Response findTransactionByQuarter(@RequestParam int quarter,@RequestParam int year,
                                              TransactionType transactionType,
                                              @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "5") int size) {
+                                             @RequestParam(defaultValue = "5") int size,
+                                             @RequestParam(defaultValue = "amount") String sortBy,
+                                             @RequestParam(required = false) SortDirection sortDirection) {
         List<Integer> months = switch (quarter) {
             case 1 -> Arrays.asList(1, 2, 3);
             case 2 -> Arrays.asList(4, 5, 6);
@@ -75,7 +103,13 @@ public class TransactionStatisticalController {
             case 4 -> Arrays.asList(10, 11, 12);
             default -> throw new IllegalArgumentException("Quý không hợp lệ: " + quarter);
         };
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable;
+        if (sortBy != null && sortDirection != null) {
+            Sort sort = (sortDirection == SortDirection.DESC) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            pageable = PageRequest.of(page, size, sort);
+        } else {
+            pageable = PageRequest.of(page, size);
+        }
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "Get quantity transaction by quarter successfully",
                 transactionStatisticalService.findTransactionByQuarter(months, year, transactionType, pageable));
@@ -85,8 +119,16 @@ public class TransactionStatisticalController {
     public Response findTransactionByYear(@RequestParam int year,
                                            TransactionType transactionType,
                                            @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+                                           @RequestParam(defaultValue = "5") int size,
+                                          @RequestParam(defaultValue = "amount") String sortBy,
+                                          @RequestParam(required = false) SortDirection sortDirection) {
+        Pageable pageable;
+        if (sortBy != null && sortDirection != null) {
+            Sort sort = (sortDirection == SortDirection.DESC) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            pageable = PageRequest.of(page, size, sort);
+        } else {
+            pageable = PageRequest.of(page, size); // Không sắp xếp, giữ nguyên thứ tự mặc định từ DB
+        }
         return new ResponseSuccess<>(HttpStatus.OK.value(),
                 "Get quantity transaction by month successfully",
                 transactionStatisticalService.findTransactionByYear(year, transactionType, pageable));

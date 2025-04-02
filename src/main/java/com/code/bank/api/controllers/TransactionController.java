@@ -6,6 +6,7 @@ import com.code.bank.api.dtos.responses.ResponseSuccess;
 import com.code.bank.api.exceptions.DataNotFoundException;
 import com.code.bank.api.mappers.TransactionMapper;
 import com.code.bank.models.Transaction;
+import com.code.bank.models.enums.SortDirection;
 import com.code.bank.services.interfaces.TransactionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.code.bank.models.enums.TransactionType;
@@ -21,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/transactions")
@@ -70,10 +71,18 @@ public class TransactionController {
             @RequestParam(required = false) LocalDate fromDate,
             @RequestParam(required = false) LocalDate toDate,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "amount") String sortBy,
+            @RequestParam(required = false) SortDirection sortDirection
 
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable;
+        if (sortBy != null && sortDirection != null) {
+            Sort sort = (sortDirection == SortDirection.DESC) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+            pageable = PageRequest.of(page, size, sort);
+        } else {
+            pageable = PageRequest.of(page, size); // Không sắp xếp, giữ nguyên thứ tự mặc định từ DB
+        }
         return transactionService.searchTransactions(minAmount, maxAmount, transactionType, fromDate, toDate, pageable);
     }
 
