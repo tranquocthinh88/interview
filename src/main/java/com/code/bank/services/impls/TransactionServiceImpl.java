@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -122,7 +123,7 @@ public class TransactionServiceImpl extends BaseServiceImpl<Transaction, String>
 
     @Override
     public Page<Transaction> searchTransactions(BigDecimal minAmount, BigDecimal maxAmount, TransactionType transactionType,
-                                                LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable) {
+                                                LocalDate fromDate, LocalDate toDate, Pageable pageable) {
         Specification<Transaction> spec = TransactionSpecification.filterTransactions(minAmount, maxAmount,
                                             transactionType, fromDate, toDate);
         return transactionRepository.findAll(spec, pageable);

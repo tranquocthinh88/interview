@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,6 @@ import java.util.Optional;
 public interface TransactionService extends BaseService<Transaction, String> {
     Transaction createTransaction(String accountNumber, TransactionDto transactionDto) throws DataNotFoundException;
     Page<Transaction> searchTransactions(BigDecimal minAmount, BigDecimal maxAmount, TransactionType transactionType,
-                                         LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable);
+                                         LocalDate fromDate, LocalDate toDate, Pageable pageable);
     List<Transaction> getTransactionsByAccountId(int accountId);
 }
