@@ -13,18 +13,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.code.bank.models.enums.TransactionType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/transactions")
@@ -65,29 +62,13 @@ public class TransactionController {
                 "delete transaction successfully" + id);
     }
 
-//    @PutMapping("/{id}")
-//    public Response updateTransaction(@PathVariable String id, @RequestBody @Valid TransactionDto transactionDto) throws Exception {
-//        Transaction transaction = transactionMapper.Transaction2DtoTransaction(transactionDto);
-//        transaction.setId(id);
-//        return new ResponseSuccess<>(HttpStatus.OK.value(),
-//                "update transaction successfully",
-//                transactionService.update(id, transaction));
-//    }
-//
-//    @PatchMapping("/{id}")
-//    public Response patchTransaction(@PathVariable String id, @RequestBody @Valid Map<String, ?> data) throws Exception {
-//        return new ResponseSuccess<>(HttpStatus.OK.value(),
-//                "update transaction successfully",
-//                transactionService.updatePatch(id,data));
-//    }
-
     @GetMapping("/search")
     public Page<Transaction> searchTransactions(
             @RequestParam(required = false) BigDecimal minAmount,
             @RequestParam(required = false) BigDecimal maxAmount,
             @RequestParam(required = false) TransactionType transactionType,
-            @RequestParam(required = false) LocalDateTime fromDate,
-            @RequestParam(required = false) LocalDateTime toDate,
+            @RequestParam(required = false) LocalDate fromDate,
+            @RequestParam(required = false) LocalDate toDate,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
 
